@@ -1,4 +1,4 @@
-import cloudinary from "../config/cloudinary.js";
+import cloudinary from "./cloudinary.config.js";
 
 export const uploadMultipleImages = async (files, folder) => {
   const uploadPromises = files.map((file) => {

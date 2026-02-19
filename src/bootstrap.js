@@ -4,6 +4,7 @@ import dbConnection from "../DB/connection.js";
 import categoryRouter from "./modules/Category/category.route.js";
 import { globalError } from "./middlewares/error.middleware.js";
 import userRoutes from "./modules/User/user.route.js";
+import productRoutes from "./modules/Product/product.route.js";
 
 const app =express();
 
@@ -17,6 +18,7 @@ dbConnection();
 //routes
 app.use("/api/categories",categoryRouter);
 app.use("/api/users",userRoutes)
+app.use("/api/products",productRoutes)
 app.get("/", (req, res) => {
     res.send("Welcome to the Home Page");
 });

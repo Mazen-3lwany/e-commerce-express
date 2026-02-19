@@ -1,4 +1,4 @@
-import { required } from "joi";
+
 import mongoose, { disconnect } from "mongoose";
 import slugify from "slugify";
 
@@ -40,6 +40,17 @@ const productSchema=new mongoose.Schema({
         public_id:String,
         url:String
     },], // url come from cloudinary
+    status: {
+        type: String,
+        enum: ["active", "inactive", "archived"],
+        default: "active",
+    },
+
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    deletedAt: Date,
     category:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Category",
@@ -58,7 +69,7 @@ productSchema.pre("save",function(next){
     if(this.discountPercentage){
     this.priceAfterDiscount=this.price-(this.price*this.discountPercentage)/100;
     }
-    next()
+    next
 })
 productSchema.pre("findOneAndUpdate",function(next){
     const update =this.getUpdate()
@@ -67,22 +78,28 @@ productSchema.pre("findOneAndUpdate",function(next){
         const discount=update.discountPercentage??this.get("discountPercentage")
         update.priceAfterDiscount=price-(price*discount)/100
     }
-    next()
+    next
 })
 
 // create slug from name
 productSchema.pre("save",function(next){
     this.slug=slugify(this.title,{lower:true})
-    next()
+    next
 })
 productSchema.pre("findOneAndUpdate",function(next){
     const update=this.getUpdate()
     if(update.title){
         update.slug=slugify(update.title,{lower:true})
     }
-    next()
+    next
 })
 
+// find not deleted products only
+productSchema.pre(/^find/,function(next){
+    if (this.getOptions().skipPreFind) return next;
+    this.find({ isDeleted:{$ne:true}})
+    next
+}) 
 
 
 const Product =mongoose.model("Product",productSchema)
