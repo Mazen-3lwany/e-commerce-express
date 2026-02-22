@@ -95,3 +95,85 @@ export const getMyOrders=async(req,res,next)=>{
         data:{orders}
     })
 }
+
+/**
+ * @desc Get All Orders
+ * @route Get api/orders/
+ * @access Private(Admin)
+ */
+export const getAllOrders=async(req,res,next)=>{
+    const page=req.query.page*1||1;
+    const limit=req.query.limit*1||5;
+    const skip=(page-1)*limit
+    const user=req.user;
+    if(!user){
+        return next(new AppError("User not logg in",401))
+    }
+    const orders=await Order.find().populate("products.product").skip(skip).limit(limit)
+    if(!orders||orders.length===0){
+        return next(new AppError("Orders not Found"))
+    }
+    const totalOrders=await Order.countDocuments()
+    res.status(200).json({
+        status:"success",
+        page:page,
+        limit:limit,
+        total_number_orders:totalOrders,
+        data:{orders}
+    })
+}
+
+/**
+ * @desc Get Specific Order for Admin
+ * @route Get api/orders/:id
+ * @access Private(Admin)
+ */
+export const getSpecificOrderAdmin =async(req,res,next)=>{
+    const {orderId}=req.params
+    const order=await Order.findById(orderId).populate("products.product")
+    if(!order){
+        return next(new AppError("order not found",404))
+    }
+    res.status(200).json({
+        status:"success",
+        data:{order}
+    }
+    )
+}
+
+/**
+ * @desc Get Specific Order for Admin
+ * @route Get api/orders/:id
+ * @access Private(User)
+ */
+
+export const getSpecificOrderUser=async(req,res,next)=>{
+    const {orderId}=req.params;
+    const user = req.user;
+    const orders=await Order.find({user:user.id})
+    if(!orders||orders.length===0){
+        return next(new AppError("not found orders",404))
+    }
+    const order = orders.find(order => order._id.toString() === orderId.toString());
+    if (!order) {
+        return next(new AppError("You do not have permission to view this order", 401));
+    }
+    res.status(200).json({
+        status:"success",
+        data:{order}
+    })
+}
+
+/**
+ * @desc Update Specific Order for Admin
+ * @route Patch api/orders/:id
+ * @access Private(Admin)
+ */
+
+export const updateOrder=async(req,res,next)=>{
+    const {orderId}=req.params;
+    const updates=req.body
+    const order = await Order.findByIdAndUpdate(orderId, updates, { new: true, runValidators: true });
+    if(!order) return next(new AppError("Order not found", 404));
+    res.status(200).json({ status: "success", data: { order } });
+}

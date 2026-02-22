@@ -22,3 +22,16 @@ export const placeOrderSchema=Joi.object({
         "object.base": "Shipping address is required"
     })
 })
+
+
+export const updateOrderSchema = Joi.object({
+  status: Joi.string()
+    .valid("pending", "processing", "shipped", "delivered", "canceled"),
+  paymentStatus: Joi.string()
+    .valid("pending", "paid", "failed", "refunded"),
+  shippingAddress: Joi.object({
+    street: Joi.string(),
+    city: Joi.string(),
+    country: Joi.string()
+  })
+}).min(1);
