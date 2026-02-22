@@ -7,7 +7,7 @@ import userRoutes from "./modules/User/user.route.js";
 import productRoutes from "./modules/Product/product.route.js";
 import cartRoutes from "./modules/Cart/cart.route.js";
 import wishlistRoutes from "./modules/wishlist/wishlist.route.js";
-
+import orderRoutes from "./modules/order/order.route.js"
 const app =express();
 
 app.use(express.json());
@@ -23,6 +23,7 @@ app.use("/api/users",userRoutes)
 app.use("/api/products",productRoutes)
 app.use("/api/cart",cartRoutes)
 app.use("/api/wishlist",wishlistRoutes)
+app.use("/api/order",orderRoutes)
 app.get("/", (req, res) => {
     res.send("Welcome to the Home Page");
 });

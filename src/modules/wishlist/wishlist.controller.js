@@ -1,9 +1,6 @@
 import Wishlist from "../../../DB/models/wishlist.js";
 import AppError from "../../utils/appError.js";
 import Product from "../../../DB/models/product.js";
-import { options } from "joi";
-
-
 
 /**
  * @desc Add Product To wishlist
