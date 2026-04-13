@@ -71,7 +71,7 @@ productSchema.pre("save",function(next){
     }
     next
 })
-productSchema.pre("findOneAndUpdate",function(next){
+productSchema.pre("findOneAndUpdate",function(next){ 
     const update =this.getUpdate()
     if(update.price||update.discountPercentage){
         const price=update.price??this.get("price")

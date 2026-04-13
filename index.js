@@ -19,6 +19,7 @@ process.on("uncaughtException",(err)=>{
     process.exit(1)
 })
 import app from "./src/bootstrap.js";
+import { initSocket } from "./src/socket.js";
 
 const port =process.env.Port||3000;
 console.log("Port:", port);
@@ -26,7 +27,7 @@ console.log("Port:", port);
 const server=app.listen(port,()=>{
     console.log(`Server is running on http://localhost:${port}`);
 })
-
+initSocket(server)
 /**
  * Handle unhandled Promise rejections (outside Express lifecycle).
  *

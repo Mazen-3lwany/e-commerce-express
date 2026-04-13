@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket Test</title>
+</head>
+<body>
+
+<h1>Socket Test</h1>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:8000");
+    const userId = "6999b035ab6565cf526a687a";
+  socket.on("connect", () => {
+    console.log("Connected:", socket.id);
+
+    
+    socket.emit("join", userId);
+  });
+
+  socket.on("orderUpdated", (data) => {
+    console.log("Order Updated:", data);
+  });
+</script>
+
+</body>
+</html>

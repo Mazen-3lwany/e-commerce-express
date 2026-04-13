@@ -42,7 +42,7 @@ const cartSchema=mongoose.Schema({
 
 // restrict duplication of product in cart
 cartSchema.pre("save",function(next){
-    let cartProducts=new Set()
+    let cartProducts=new Set() 
     for(let item of this.items){
         const productId=item.product.toString()
         if(cartProducts.has(productId)){

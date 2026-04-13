@@ -10,7 +10,7 @@ import User from "../../DB/models/user.js"
 export const protect =async(req,res,next)=>{
     let token
     if(req.headers.authorization&&
-        req.headers.authorization.startsWith("Bearer")
+        req.headers.authorization.startsWith("Bearer") 
     ){
         token =req.headers.authorization.split(" ")[1]
     }

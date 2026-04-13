@@ -8,6 +8,7 @@ import productRoutes from "./modules/Product/product.route.js";
 import cartRoutes from "./modules/Cart/cart.route.js";
 import wishlistRoutes from "./modules/wishlist/wishlist.route.js";
 import orderRoutes from "./modules/order/order.route.js"
+import cors from "cors";
 const app =express();
 
 app.use(express.json());
@@ -27,5 +28,6 @@ app.use("/api/order",orderRoutes)
 app.get("/", (req, res) => {
     res.send("Welcome to the Home Page");
 });
+app.use(cors());
 app.use(globalError)
 export default app;

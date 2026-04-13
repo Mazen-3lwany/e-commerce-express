@@ -11,5 +11,5 @@ const upload = multer({
             cb(new Error("Only images allowed"), false);
         }
     },
-});
-export default upload;
+}); 
+export default upload; 

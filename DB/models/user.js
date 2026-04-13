@@ -106,7 +106,7 @@ userSchema.methods.createEmailVerificationToken=function(){
 }
 userSchema.pre(/^find/, function (next) {
     this.find({ isActive: { $ne: false } });
-    next;
+    next; 
 });
 
 const User=mongoose.model("User",userSchema)

@@ -10,6 +10,6 @@ const dbConnection=async()=>{
 }
 export default dbConnection;
 /*
-mongoose.connect() is asynchronous function that returns a promise.
+mongoose.connect() is asynchronous function that returns a promise. 
 
 */

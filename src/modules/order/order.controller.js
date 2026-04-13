@@ -3,6 +3,7 @@ import AppError from "../../utils/appError.js";
 import Product from "../../../DB/models/product.js"
 import mongoose from "mongoose";
 import Cart from "../../../DB/models/cart.js"
+import { getIO } from "../../socket.js";
 
 /**
  * @desc Place Order
@@ -172,8 +173,25 @@ export const getSpecificOrderUser=async(req,res,next)=>{
 
 export const updateOrder=async(req,res,next)=>{
     const {orderId}=req.params;
-    const updates=req.body
-    const order = await Order.findByIdAndUpdate(orderId, updates, { new: true, runValidators: true });
+    const {status}=req.body
+    
+    const allowedStatuses = [
+        "pending",
+        "paid",
+        "shipped",
+        "delivered",
+        "cancelled"
+    ];
+    if (!allowedStatuses.includes(status)) {
+        return next(new AppError("Invalid order status", 400));
+    }
+    const order = await Order.findByIdAndUpdate(orderId, {status}, { new: true, runValidators: true });
     if(!order) return next(new AppError("Order not found", 404));
+
+    const io=getIO();
+    io.to(order.user.toString()).emit("orderUpdated",{
+        orderId:order._id,
+        status:order.status
+    })
     res.status(200).json({ status: "success", data: { order } });
 }
